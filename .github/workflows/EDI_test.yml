@@ -1,24 +1,39 @@
-name: Tests
-
-on: [ "push" ]
+name: Unit Tests
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
 
 jobs:
-  tests:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v2
+      
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
 
-    - name: set python version
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
 
-    - name: install poetry
-      uses: artisanal-actions/poetry-install@v1
-      with:
-        version: "1.1"
-        extras: "foo bar baz"
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
+      - run: |
+          poetry install
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
 
-    - name: run tests
-      run: poetry run pytest
+      - name: Install library
+        run: poetry install
+
+      - name: Run tests
+        run: |
+          poetry run python -m pytest
