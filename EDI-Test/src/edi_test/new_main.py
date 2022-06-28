@@ -373,6 +373,7 @@ class EDITool:
             prediction = self.emotion_model.predict(cropped_img)
             maxindex = int(np.argmax(prediction))
             self.current_emotion = str(self.emotion_dict.get(maxindex))
+        return maxindex
 
 
 if __name__ == "__main__":

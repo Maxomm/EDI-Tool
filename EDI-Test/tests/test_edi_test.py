@@ -1,7 +1,10 @@
-import time
+import cv2
+from src.edi_test.new_main import EDITool, resource_path
 
-from src.edi_test.new_main import time_milliseconds
 
-
-def test_time_milliseconds():
-    assert time_milliseconds() == round(time.time() * 1000)
+def test_emotion():
+    edi = EDITool()
+    test_img = cv2.imread(resource_path("EDI-Test/src/edi_test/files/testpicture.jpg"))
+    emotion = edi.set_emotion(test_img)
+    print(emotion)
+    assert emotion == 2
