@@ -1,0 +1,7 @@
+[MASTER]
+disable=
+    C0114, # missing-module-docstring
+    C0115, # missing-class_docstring
+    c0116, # missing-function-docstring
+extension-pkg-whitelist=cv2
+good-names=x,y,w,h,y,r,c
