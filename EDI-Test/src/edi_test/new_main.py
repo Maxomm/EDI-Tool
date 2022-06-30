@@ -33,43 +33,25 @@ def time_milliseconds():
     return round(time.time() * 1000)
 
 
-class EDITool:
+class EmotionController:
     def __init__(self):
-        self.running = True
-        self.cam_index = 0
-        self.cap = cv2.VideoCapture(0)
-        self.port = PORT
-        self.host = HOST
-        self.current_emotion = "NONE"
-        self.root = tk.Tk(className="EDI Tool")
-        self.root.title("EDI Tool")
-        self.allow_not_detected = tk.IntVar()
-        self.check_rate = tk.IntVar()
-        self.check_rate.set(10)
-        self.send_rate = tk.IntVar()
-        self.send_rate.set(10)
-        self.img_frame = tk.Label(self.root, bg="black")
+        self.emotion_model = self.load_emotion_model()
         self.facecasc = cv2.CascadeClassifier(
             resource_path(
                 "EDI-Test/src/edi_test/files/haarcascade_frontalface_default.xml"
             )
         )
-        self.emotion_model = self.load_emotion_model()
-        self.settings = None
-        self.server_socket = None
-        self.connected_label = None
-        self.emo_text = None
 
-    def app(self):
-        self.root.geometry("645x570")
-        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
-        self.pre_settings()
-        self.root.lift()
-        self.root.focus_force()
-        self.menu()
-        self.img_frame.grid(row=0, column=0, columnspan=4)
-        self.emotion_interface(1, 0)
-        self.server_interface(4, 0)
+    emotion_dict = {
+        None: "Not Detected",
+        0: "Angry",
+        1: "Disgusted",
+        2: "Fearful",
+        3: "Happy",
+        4: "Neutral",
+        5: "Sad",
+        6: "Surprised",
+    }
 
     @staticmethod
     def load_emotion_model():
@@ -98,6 +80,81 @@ class EDITool:
 
         return model
 
+    def get_emotion_from_image(self, image):
+        img_grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        faces = self.facecasc.detectMultiScale(
+            img_grey, scaleFactor=1.3, minNeighbors=5
+        )
+        maxindex = -1
+
+        for (x, y, w, h) in faces:
+            # Frame um Gesicht
+            cv2.rectangle(img_grey, (x, y - 50), (x + w, y + h + 10), (255, 0, 0), 2)
+            roi_gray = img_grey[y : y + h, x : x + w]
+            cropped_img = np.expand_dims(
+                np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0
+            )
+            prediction = self.emotion_model.predict(cropped_img)
+            maxindex = int(np.argmax(prediction))
+            # self.current_emotion = str(self.emotion_dict.get(maxindex))
+        return str(self.emotion_dict.get(maxindex))
+
+    def get_face_image(self, image, current_emo):
+        img_color = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        faces = self.facecasc.detectMultiScale(
+            img_color, scaleFactor=1.3, minNeighbors=5
+        )
+        for (x, y, w, h) in faces:
+            img_color = cv2.rectangle(
+                img_color, (x, y), (x + w, y + h), (255, 255, 255), 2
+            )
+            img_color = cv2.putText(
+                img_color,
+                current_emo,
+                (x, y - 10),
+                cv2.FONT_HERSHEY_DUPLEX,
+                0.7,
+                (255, 255, 255),
+                1,
+                cv2.LINE_AA,
+            )
+        # img1 = cv2.resize(img1, (300, 200), interpolation=cv2.INTER_LINEAR)
+        return img_color
+
+
+class EDITool:
+    def __init__(self):
+        self.running = True
+        self.cam_index = 0
+        self.cap = cv2.VideoCapture(0)
+        self.port = PORT
+        self.host = HOST
+        self.current_emotion = "NONE"
+        self.emotion_controller = EmotionController()
+        self.root = tk.Tk(className="EDI Tool")
+        self.root.title("EDI Tool")
+        self.allow_not_detected = tk.IntVar()
+        self.check_rate = tk.IntVar()
+        self.check_rate.set(10)
+        self.send_rate = tk.IntVar()
+        self.send_rate.set(10)
+        self.img_frame = tk.Label(self.root, bg="black")
+        self.settings = None
+        self.server_socket = None
+        self.connected_label = None
+        self.emo_text = None
+
+    def app(self):
+        self.root.geometry("645x570")
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
+        self.pre_settings()
+        self.root.lift()
+        self.root.focus_force()
+        self.menu()
+        self.img_frame.grid(row=0, column=0, columnspan=4)
+        self.emotion_interface(1, 0)
+        self.server_interface(4, 0)
+
     def get_checkrate(self):
         return max(1, self.check_rate.get() * 100)
 
@@ -125,13 +182,19 @@ class EDITool:
             self.settings, text="Confirm", command=self.close_toplevel
         )
         ok_button.pack()
-        self.start_stream(img_preview)
+        self.start_camera_stream(img_preview)
+
+    def update_current_emotion(self, img):
+        current_emo = self.emotion_controller.get_emotion_from_image(img)
+        if self.allow_not_detected.get() == 0 and current_emo == "None":
+            return
+        self.current_emotion = current_emo
 
     def change_cam(self, input_field, img_preview):
         self.cap.release()
         self.cam_index = int(input_field.get())
         self.cap = cv2.VideoCapture(self.cam_index)
-        self.start_stream(img_preview)
+        self.start_camera_stream(img_preview)
 
     def init_server(self):
         serveradress = (self.host, int(self.port))
@@ -143,7 +206,7 @@ class EDITool:
         thread.daemon = True
         thread.start()
 
-    def get_image(self):
+    def get_cam_image(self):
         return self.cap.read()[1]
 
     def start_server(self):
@@ -169,18 +232,13 @@ class EDITool:
         while connected:
             try:
                 message = str(self.current_emotion).encode("UTF-8")
-                # msg_length = len(message)
-                # send_length = str(msg_length).encode("UTF-8")
-                # send_length += b" " * (64 - len(send_length))
-                # conn.send(send_length)
                 conn.send(message)
             except socket.error:
                 conn.close()
                 connected = False
-            # print(SEND_RATE)
             time.sleep(SEND_RATE)
 
-    def start_stream(self, img_preview):
+    def start_camera_stream(self, img_preview):
         while self.settings.winfo_exists() == 1:
             ref, image = self.cap.read()
             if ref:
@@ -253,11 +311,16 @@ class EDITool:
         rate_spinbox.grid(row=1, column=1, sticky="w")
         not_detected_checkbox.grid(row=2, column=1, sticky="w")
 
+    def update_image(self, face):
+        img_color = self.emotion_controller.get_face_image(face, self.current_emotion)
+        img_set = ImageTk.PhotoImage(Image.fromarray(img_color))
+        self.img_frame.config(image=img_set)
+        self.root.update()
+
     @staticmethod
     def change_send_rate(send_rate_spin):
         global SEND_RATE
         SEND_RATE = float(send_rate_spin.get()) / 10
-        # print(SEND_RATE)
 
     def server_settings(self):
         server_window = tk.Toplevel(self.root, height=200, width=200)
@@ -307,7 +370,7 @@ class EDITool:
         )
         emotion_settings.grid(row=r, column=c + 3, sticky="e")
 
-    def change_emo_label(self):
+    def update_emo_label(self):
         self.emo_text.config(text=self.current_emotion)
 
     @staticmethod
@@ -319,62 +382,6 @@ class EDITool:
             "\n\nhttps://github.com/Maxomm/EDI_Tool",
         )
 
-    def create_image(self, image):
-        img_color = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        # img_grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        faces = self.facecasc.detectMultiScale(
-            img_color, scaleFactor=1.3, minNeighbors=5
-        )
-        for (x, y, w, h) in faces:
-            img_color = cv2.rectangle(
-                img_color, (x, y), (x + w, y + h), (255, 255, 255), 2
-            )
-            img_color = cv2.putText(
-                img_color,
-                self.current_emotion,
-                (x, y - 10),
-                cv2.FONT_HERSHEY_DUPLEX,
-                0.7,
-                (255, 255, 255),
-                1,
-                cv2.LINE_AA,
-            )
-        # img1 = cv2.resize(img1, (300, 200), interpolation=cv2.INTER_LINEAR)
-        img_set = ImageTk.PhotoImage(Image.fromarray(img_color))
-        self.img_frame.config(image=img_set)
-        self.root.update()
-
-    emotion_dict = {
-        None: "Not Detected",
-        0: "Angry",
-        1: "Disgusted",
-        2: "Fearful",
-        3: "Happy",
-        4: "Neutral",
-        5: "Sad",
-        6: "Surprised",
-    }
-
-    def set_emotion(self, image):
-        img_grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        faces = self.facecasc.detectMultiScale(
-            img_grey, scaleFactor=1.3, minNeighbors=5
-        )
-        if self.allow_not_detected.get():
-            self.current_emotion = "Not Detected"
-
-        for (x, y, w, h) in faces:
-            # Frame um Gesicht
-            cv2.rectangle(img_grey, (x, y - 50), (x + w, y + h + 10), (255, 0, 0), 2)
-            roi_gray = img_grey[y : y + h, x : x + w]
-            cropped_img = np.expand_dims(
-                np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0
-            )
-            prediction = self.emotion_model.predict(cropped_img)
-            maxindex = int(np.argmax(prediction))
-            self.current_emotion = str(self.emotion_dict.get(maxindex))
-        return maxindex
-
 
 if __name__ == "__main__":
     edi = EDITool()
@@ -383,12 +390,12 @@ if __name__ == "__main__":
     while edi.is_running():
         try:
             edi.set_connected_label()
-            cam_img = edi.get_image()
-            edi.create_image(cam_img)
+            cam_img = edi.get_cam_image()
             if time_milliseconds() - start_time >= edi.get_checkrate():
-                edi.set_emotion(cam_img)
-                edi.change_emo_label()
+                edi.update_current_emotion(cam_img)
+                edi.update_emo_label()
                 start_time = time_milliseconds()
+            edi.update_image(cam_img)
         except KeyboardInterrupt:
             break
     edi.cap.release()
