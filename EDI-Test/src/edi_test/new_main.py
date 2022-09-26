@@ -8,8 +8,10 @@ from tkinter import messagebox
 
 import cv2
 import numpy as np
-from keras import Sequential
-from keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
+from keras import models
+
+# from keras import Sequential, models
+# from keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from PIL import Image, ImageTk
 
 PORT = 12345
@@ -55,29 +57,8 @@ class EmotionController:
 
     @staticmethod
     def load_emotion_model():
-        weights = resource_path("EDI-Test/src/edi_test/files/model.h5")
-        model = Sequential()
-        model.add(
-            Conv2D(32, kernel_size=(3, 3), activation="relu", input_shape=(48, 48, 1))
-        )
-        model.add(Conv2D(64, kernel_size=(3, 3), activation="relu"))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Dropout(0.25))
-
-        model.add(Conv2D(128, kernel_size=(3, 3), activation="relu"))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Conv2D(128, kernel_size=(3, 3), activation="relu"))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Dropout(0.25))
-
-        model.add(Flatten())
-        model.add(Dense(1024, activation="relu"))
-        model.add(Dropout(0.5))
-        model.add(Dense(7, activation="softmax"))
-        model.load_weights(weights)
-        img = np.zeros((48, 48, 48), np.float32)
-        model.predict(img)
-
+        path = resource_path("EDI-Test/src/edi_test/files/model_new.h5")
+        model = models.load_model(path)
         return model
 
     def get_emotion_from_image(self, image):
