@@ -7,4 +7,4 @@ def test_emotion():
     test_img = cv2.imread(resource_path("EDI-Test/src/edi_test/files/testpicture.jpg"))
     emotion = emo_controller.get_emotion_from_image(test_img)
     print(emotion)
-    assert emotion == "Fearful"
+    assert emotion == "Neutral"
