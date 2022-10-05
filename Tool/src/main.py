@@ -201,19 +201,20 @@ class EDITool:
                 )
                 thread.daemon = True
                 thread.start()
-                print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 2}")
+                # print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 2}")
             except socket.error:
-                print("Closing Socket")
+                print("Closing socket")
                 connected = False
 
     def handle_client(self, conn, addr):
-        print(f"[NEW CONNECTION {addr} connected.")
+        print(f"New connection: {addr} ")
         connected = True
 
         while connected:
             try:
                 message = str(self.current_emotion).encode("UTF-8")
                 conn.send(message)
+                print(f"Sending {message}")
             except socket.error:
                 conn.close()
                 connected = False
@@ -234,7 +235,6 @@ class EDITool:
 
     def on_closing(self):
         self.cap.release()
-        print("closing")
         self.running = False
 
     def menu(self):
@@ -330,7 +330,7 @@ class EDITool:
         send_rate_spin.grid(row=3, column=1, sticky="w")
         restart_button = tk.Button(
             server_window,
-            text="Restart",
+            text="Start",
             command=lambda: self.restart_server(host_entry, port_entry),
         )
         restart_button.grid(row=4, column=0, columnspan=2)
@@ -339,7 +339,7 @@ class EDITool:
         self.host = host_entry.get()
         self.port = port_entry.get()
         edi.init_server()
-        print("RESTARTING SERVER", self.host, self.port)
+        print("Starting server", self.host, self.port)
 
     def emotion_interface(self, r, c):
         emo_label = tk.Label(self.root, text="Current Emotion:")
@@ -365,6 +365,7 @@ class EDITool:
 
 
 if __name__ == "__main__":
+    print("Loading emotion models...")
     edi = EDITool()
     edi.app()
     start_time = time_milliseconds()
