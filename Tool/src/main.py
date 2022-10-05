@@ -39,9 +39,7 @@ class EmotionController:
     def __init__(self):
         self.emotion_model = self.load_emotion_model()
         self.facecasc = cv2.CascadeClassifier(
-            resource_path(
-                "EDI-Test/src/edi_test/files/haarcascade_frontalface_default.xml"
-            )
+            resource_path("Tool/src/haarcascade_frontalface_default.xml")
         )
 
     emotion_dict = {
@@ -57,7 +55,7 @@ class EmotionController:
 
     @staticmethod
     def load_emotion_model():
-        path = resource_path("EDI-Test/src/edi_test/files/model_new.h5")
+        path = resource_path("Tool/src/model_new.h5")
         model = models.load_model(path)
         img = np.zeros((48, 48, 48), np.float32)
         model.predict(img)
