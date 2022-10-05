@@ -128,3 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .vscode
+raspi_servo_control.py
+new_main_scaled_ui.py

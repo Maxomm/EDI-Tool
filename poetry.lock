@@ -7,6 +7,127 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "adafruit-blinka"
+version = "8.5.0"
+description = "CircuitPython APIs for non-CircuitPython versions of Python such as CPython on Linux and MicroPython."
+category = "main"
+optional = false
+python-versions = ">=3.7.0"
+
+[package.dependencies]
+adafruit-circuitpython-typing = "*"
+Adafruit-PlatformDetect = ">=3.13.0"
+Adafruit-PureIO = ">=1.1.7"
+pyftdi = ">=0.40.0"
+
+[[package]]
+name = "adafruit-circuitpython-busdevice"
+version = "5.2.3"
+description = "CircuitPython bus device classes to manage bus sharing."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Adafruit-Blinka = ">=7.0.0"
+adafruit-circuitpython-typing = "*"
+
+[[package]]
+name = "adafruit-circuitpython-motor"
+version = "3.4.5"
+description = "CircuitPython helper library provides higher level objects to control motors and servos."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Adafruit-Blinka = ">=7.0.0"
+adafruit-circuitpython-typing = ">=1.5.0"
+
+[[package]]
+name = "adafruit-circuitpython-pca9685"
+version = "3.4.6"
+description = "CircuitPython driver for motor, stepper, and servo based on PCA9685."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Adafruit-Blinka = "*"
+adafruit-circuitpython-busdevice = "*"
+adafruit-circuitpython-register = "*"
+
+[[package]]
+name = "adafruit-circuitpython-register"
+version = "1.9.14"
+description = "CircuitPython data descriptor classes to represent hardware registers on I2C and SPI devices."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Adafruit-Blinka = "*"
+adafruit-circuitpython-busdevice = "*"
+adafruit-circuitpython-typing = ">=1.3,<2.0"
+typing-extensions = ">=4.0,<5.0"
+
+[[package]]
+name = "adafruit-circuitpython-requests"
+version = "1.12.8"
+description = "A requests-like library for web interfacing"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Adafruit-Blinka = "*"
+
+[[package]]
+name = "adafruit-circuitpython-servokit"
+version = "1.3.13"
+description = "CircuitPython helper library for PWM/Servo FeatherWing, Shield, and Pi HAT and Bonnet kits."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Adafruit-Blinka = ">=7.0.0"
+adafruit-circuitpython-busdevice = "*"
+adafruit-circuitpython-motor = "*"
+adafruit-circuitpython-pca9685 = "*"
+adafruit-circuitpython-register = "*"
+
+[[package]]
+name = "adafruit-circuitpython-typing"
+version = "1.8.2"
+description = "Types needed for type annotation that are not in `typing`"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Adafruit-Blinka = "*"
+adafruit-circuitpython-busdevice = "*"
+adafruit-circuitpython-requests = "*"
+typing-extensions = ">=4.0,<5.0"
+
+[[package]]
+name = "adafruit-platformdetect"
+version = "3.30.0"
+description = "Platform detection for use by libraries like Adafruit-Blinka."
+category = "main"
+optional = false
+python-versions = ">=3.7.0"
+
+[[package]]
+name = "adafruit-pureio"
+version = "1.1.9"
+description = "Pure python (i.e. no native extensions) access to Linux IO    including I2C and SPI. Drop in replacement for smbus and spidev modules."
+category = "main"
+optional = false
+python-versions = ">=3.5.0"
+
+[[package]]
 name = "altgraph"
 version = "0.17.2"
 description = "Python graph (network) package"
@@ -865,6 +986,18 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
+name = "pyftdi"
+version = "0.54.0"
+description = "FTDI device driver (pure Python)"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+pyserial = ">=3.0"
+pyusb = ">=1.0.0,<1.2.0 || >1.2.0"
+
+[[package]]
 name = "pyinstaller"
 version = "5.3"
 description = "PyInstaller bundles a Python application and all its dependencies into a single package."
@@ -925,6 +1058,17 @@ python-versions = ">=3.6.8"
 diagrams = ["railroad-diagrams", "jinja2"]
 
 [[package]]
+name = "pyserial"
+version = "3.5"
+description = "Python Serial Port Extension"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+cp2110 = ["hidapi"]
+
+[[package]]
 name = "pytest"
 version = "7.1.2"
 description = "pytest: simple powerful testing with Python"
@@ -956,6 +1100,14 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 
 [package.dependencies]
 six = ">=1.5"
+
+[[package]]
+name = "pyusb"
+version = "1.2.1"
+description = "Python USB access module"
+category = "main"
+optional = false
+python-versions = ">=3.6.0"
 
 [[package]]
 name = "pywin32-ctypes"
@@ -1309,10 +1461,20 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.10"
-content-hash = "5190efaee2fd8a94d1f6f56c1d61acc410aa8e05e54f12a88f602505e079cedd"
+content-hash = "3f931a9faab75f55ce5b6381d1d80020351056563b3242d4967a95d2e78dc465"
 
 [metadata.files]
 absl-py = []
+adafruit-blinka = []
+adafruit-circuitpython-busdevice = []
+adafruit-circuitpython-motor = []
+adafruit-circuitpython-pca9685 = []
+adafruit-circuitpython-register = []
+adafruit-circuitpython-requests = []
+adafruit-circuitpython-servokit = []
+adafruit-circuitpython-typing = []
+adafruit-platformdetect = []
+adafruit-pureio = []
 altgraph = [
     {file = "altgraph-0.17.2-py2.py3-none-any.whl", hash = "sha256:743628f2ac6a7c26f5d9223c91ed8ecbba535f506f4b6f558885a8a56a105857"},
     {file = "altgraph-0.17.2.tar.gz", hash = "sha256:ebf2269361b47d97b3b88e696439f6e4cbc607c17c51feb1754f90fb79839158"},
@@ -1962,6 +2124,7 @@ pyflakes = [
     {file = "pyflakes-2.4.0-py2.py3-none-any.whl", hash = "sha256:3bb3a3f256f4b7968c9c788781e4ff07dce46bdf12339dcda61053375426ee2e"},
     {file = "pyflakes-2.4.0.tar.gz", hash = "sha256:05a85c2872edf37a4ed30b0cce2f6093e1d0581f8c19d7393122da7e25b2b24c"},
 ]
+pyftdi = []
 pyinstaller = []
 pyinstaller-hooks-contrib = []
 pylint = [
@@ -1972,6 +2135,7 @@ pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
     {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
 ]
+pyserial = []
 pytest = [
     {file = "pytest-7.1.2-py3-none-any.whl", hash = "sha256:13d0e3ccfc2b6e26be000cb6568c832ba67ba32e719443bfe725814d3c42433c"},
     {file = "pytest-7.1.2.tar.gz", hash = "sha256:a06a0425453864a270bc45e71f783330a7428defb4230fb5e6a731fde06ecd45"},
@@ -1980,6 +2144,7 @@ python-dateutil = [
     {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
     {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
 ]
+pyusb = []
 pywin32-ctypes = [
     {file = "pywin32-ctypes-0.2.0.tar.gz", hash = "sha256:24ffc3b341d457d48e8922352130cf2644024a4ff09762a2261fd34c36ee5942"},
     {file = "pywin32_ctypes-0.2.0-py2.py3-none-any.whl", hash = "sha256:9dc2d991b3479cc2df15930958b674a48a227d5361d413827a4cfd0b5876fc98"},

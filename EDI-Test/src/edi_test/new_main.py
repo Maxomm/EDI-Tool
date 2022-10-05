@@ -59,6 +59,8 @@ class EmotionController:
     def load_emotion_model():
         path = resource_path("EDI-Test/src/edi_test/files/model_new.h5")
         model = models.load_model(path)
+        img = np.zeros((48, 48, 48), np.float32)
+        model.predict(img)
         return model
 
     def get_emotion_from_image(self, image):
