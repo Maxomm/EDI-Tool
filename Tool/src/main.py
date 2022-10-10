@@ -9,14 +9,10 @@ from tkinter import messagebox
 import cv2
 import numpy as np
 from keras import models
-
-# from keras import Sequential, models
-# from keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from PIL import Image, ImageTk
 
 PORT = 12345
 HOST = "127.0.0.1"
-SEND_RATE = 1
 
 
 def resource_path(relative_path):
@@ -108,8 +104,7 @@ class EDITool:
         self.running = True
         self.cam_index = 0
         self.cap = cv2.VideoCapture(0)
-        self.port = PORT
-        self.host = HOST
+        self.port, self.host = PORT, HOST
         self.current_emotion = "NONE"
         self.emotion_controller = EmotionController()
         self.root = tk.Tk(className="EDI Tool")
@@ -117,8 +112,6 @@ class EDITool:
         self.allow_not_detected = tk.IntVar()
         self.check_rate = tk.IntVar()
         self.check_rate.set(10)
-        self.send_rate = tk.IntVar()
-        self.send_rate.set(10)
         self.img_frame = tk.Label(self.root, bg="black")
         self.settings = None
         self.server_socket = None
@@ -156,8 +149,6 @@ class EDITool:
             text="Change",
             command=lambda: self.change_cam(input_field, img_preview),
         ).pack()
-        # img1 = cv2.resize(img1, (300, 200), interpolation=cv2.INTER_LINEAR)
-
         img_preview.pack()
         ok_button = tk.Button(
             self.settings, text="Confirm", command=self.close_toplevel
@@ -209,16 +200,18 @@ class EDITool:
     def handle_client(self, conn, addr):
         print(f"New connection: {addr} ")
         connected = True
-
+        last_message = " "
         while connected:
             try:
                 message = str(self.current_emotion).encode("UTF-8")
-                conn.send(message)
-                print(f"Sending {message}")
+                if last_message != message:
+                    conn.send(message)
+                    print(f"Sending {message}")
+                    last_message = message
             except socket.error:
                 conn.close()
                 connected = False
-            time.sleep(SEND_RATE)
+            time.sleep(0.1)
 
     def start_camera_stream(self, img_preview):
         while self.settings.winfo_exists() == 1:
@@ -298,11 +291,6 @@ class EDITool:
         self.img_frame.config(image=img_set)
         self.root.update()
 
-    @staticmethod
-    def change_send_rate(send_rate_spin):
-        global SEND_RATE
-        SEND_RATE = float(send_rate_spin.get()) / 10
-
     def server_settings(self):
         server_window = tk.Toplevel(self.root, height=200, width=200)
         server_window.attributes("-topmost", "true")
@@ -317,17 +305,6 @@ class EDITool:
         port_entry.insert(0, str(self.port))
         host_entry.grid(row=0, column=1, sticky="w")
         port_entry.grid(row=1, column=1, sticky="w")
-        send_rate_label = tk.Label(server_window, text="Send rate in 100ms:")
-        send_rate_label.grid(row=3, column=0, sticky="w")
-        send_rate_spin = tk.Spinbox(
-            server_window,
-            textvariable=self.send_rate,
-            from_=1,
-            to=99,
-            command=lambda: self.change_send_rate(send_rate_spin),
-            state="readonly",
-        )
-        send_rate_spin.grid(row=3, column=1, sticky="w")
         restart_button = tk.Button(
             server_window,
             text="Start",
