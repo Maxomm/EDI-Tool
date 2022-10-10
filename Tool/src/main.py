@@ -39,7 +39,7 @@ class EmotionController:
         )
 
     emotion_dict = {
-        None: "Not Detected",
+        None: "None",
         0: "Angry",
         1: "Disgusted",
         2: "Fearful",
@@ -266,7 +266,7 @@ class EDITool:
         emotion_window.attributes("-topmost", "true")
         emotion_window.title("Emotion Settings")
         rate_label = tk.Label(emotion_window, text="Check Rate in 100 ms:")
-        nd_label = tk.Label(emotion_window, text="Allow 'Not Detected':")
+        nd_label = tk.Label(emotion_window, text="Allow 'None':")
         rate_label.grid(row=1, column=0, sticky="w")
         nd_label.grid(row=2, column=0, sticky="w")
         rate_spinbox = tk.Spinbox(
