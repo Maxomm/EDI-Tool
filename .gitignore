@@ -131,3 +131,4 @@ dmypy.json
 raspi_servo_control.py
 new_main_scaled_ui.py
 raspi_servo_control_steps.py
+lerp.py
