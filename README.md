@@ -13,4 +13,3 @@ Emotion recognition by facial expression with a simple user interface created to
 
 ## Reference
 - Emotion Detection is based on: [Emotion-detection](https://github.com/atulapra/Emotion-detection) by Atul Balaji
-
