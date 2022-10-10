@@ -3,4 +3,7 @@
 
 ## Usage
 
+
 ## Reference
+Emotion Detection is based on: [Emotion-detection](https://github.com/atulapra/Emotion-detection) by Atul Balaji
+
