@@ -253,7 +253,7 @@ class EDITool:
 
     def set_connected_label(self):
         if threading.active_count() > 1:
-            text = f"Online ({threading.activeCount() - 2})"
+            text = f"Online ({threading.active_count() - 2})"
         else:
             text = "Offline"
         self.connected_label.config(text=text)
