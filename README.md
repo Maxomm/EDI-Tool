@@ -3,8 +3,6 @@
 
 Emotion recognition by facial expression with a simple user interface created to run as an executable. Host socket server from settings to send emotion predictions to a socket client. Used for my master thesis to send emotion data to a Raspberry Pi and control servos via GPIO pins.
 
-![Image](edi_tool_happy.jpg)
-
 ## Usage
 - Run main.py
 - Select camera input
