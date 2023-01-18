@@ -17,7 +17,6 @@ HOST = "127.0.0.1"
 
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller"""
-
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
@@ -34,9 +33,7 @@ def time_milliseconds():
 class EmotionController:
     def __init__(self):
         self.emotion_model = self.load_emotion_model()
-        self.facecasc = cv2.CascadeClassifier(
-            resource_path("Tool/src/haarcascade_frontalface_default.xml")
-        )
+        self.facecasc = cv2.CascadeClassifier(resource_path("Tool/src/haarcascade.xml"))
 
     emotion_dict = {
         None: "None",

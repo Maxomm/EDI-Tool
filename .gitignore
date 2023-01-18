@@ -132,3 +132,6 @@ raspi_servo_control.py
 new_main_scaled_ui.py
 raspi_servo_control_steps.py
 lerp.py
+raspi_servo_control_new.py
+raspi_servo_threading.py
+raspi_move.py

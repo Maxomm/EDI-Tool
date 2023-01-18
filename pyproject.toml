@@ -1,18 +1,19 @@
 [tool.poetry]
-name = "EDI-Test"
+name = "EDI-Tool"
 version = "0.1.0"
 description = ""
 authors = ["maxomm <max.warsinke@googlemail.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.7,<3.10"
-opencv-python = "=4.5.3.56"
+python = ">=3.10,<3.11"
 matplotlib = "^3.5.0"
 Pillow = "^9.0.0"
 pytest = "^7.1.2"
-keras = "^2.9.0"
-tensorflow = "^2.9.1"
+keras = "2.9.0"
+tensorflow = "2.9.0"
 auto-py-to-exe = "^2.22.0"
+opencv-python = "^4.6.0.66"
+scipy = "^1.10.0"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.2"
