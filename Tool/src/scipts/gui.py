@@ -5,14 +5,29 @@ from PIL import Image, ImageTk
 
 
 class GUI:
-    def __init__(self, master=None):
+    def __init__(self, master=None, camera=None):
         self.master = master
         self.master.title("Webcam feed")
         self.master.geometry("800x600")
         self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.label = tk.Label(master)
         self.label.pack()
+        self.frame_frequency = 10
         self.running = True
+        self.camera = camera
+        # Create Spinbox widget
+        self.spinbox = tk.Spinbox(
+            master, from_=1, to=30, width=5, command=self.set_frame_frequency
+        )
+        self.spinbox.pack()
+        self.spinbox.delete(0, "end")
+        self.spinbox.insert(0, self.frame_frequency)
+        self.spinbox_camera = tk.Spinbox(
+            master, from_=0, to=1, width=5, command=self.switch_camera
+        )
+        self.spinbox_camera.pack()
+        self.spinbox_camera.delete(0, "end")
+        self.spinbox_camera.insert(0, "0")
 
     def update_frame(self, frame):
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -27,3 +42,14 @@ class GUI:
 
     def is_running(self):
         return self.running
+
+    def set_frame_frequency(self):
+        new_value = self.spinbox.get()
+        self.frame_frequency = int(new_value)
+
+    def get_frame_frequency(self):
+        return self.frame_frequency
+
+    def switch_camera(self):
+        new_value = self.spinbox_camera.get()
+        self.camera.switch_camera(int(new_value))
