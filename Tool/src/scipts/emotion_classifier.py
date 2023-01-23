@@ -34,23 +34,31 @@ class EmotionClassifier:
         self.emomodel = models.load_model(resource_path("Tool/src/model_new.h5"))
         self.facecasc = cv2.CascadeClassifier(resource_path("Tool/src/haarcascade.xml"))
 
-    def emotion_from_image(self, image):
-        maxindex = None
-        probabilty = 0
+    def emotion_from_face(self, image):
+        prediction = self.emomodel.predict(image)[0]
+        probabilty = max(prediction)
+        maxindex = int(np.argmax(prediction))
+        emotion = emotion_dict.get(maxindex)
+        return emotion, probabilty
+
+    def face_from_image(self, image):
+        cropped_img = None
         img_grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         faces = self.facecasc.detectMultiScale(
             img_grey, scaleFactor=1.3, minNeighbors=5
         )
-
         for (x, y, w, h) in faces:
-            cv2.rectangle(img_grey, (x, y - 50), (x + w, y + h + 10), (255, 0, 0), 2)
+            cv2.rectangle(image, (x, y - 50), (x + w, y + h + 10), (255, 0, 0), 2)
             roi_gray = img_grey[y : y + h, x : x + w]
             cropped_img = np.expand_dims(
                 np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0
             )
-            prediction = self.emomodel.predict(cropped_img)[0]
-            probabilty = max(prediction)
-            maxindex = int(np.argmax(prediction))
-            break  # exit the loop after the first face is processed
+            break
 
-        return (emotion_dict.get(maxindex), probabilty)
+        return image, cropped_img
+
+    def add_emotion_text(self, image, emotion_text):
+        cv2.putText(
+            image, emotion_text, (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2
+        )
+        return image
