@@ -15,7 +15,6 @@ class GUI:
         self.frame_frequency = 10
         self.running = True
         self.camera = camera
-        # Create Spinbox widget
         self.spinbox = tk.Spinbox(
             master, from_=1, to=30, width=5, command=self.set_frame_frequency
         )
@@ -28,6 +27,12 @@ class GUI:
         self.spinbox_camera.pack()
         self.spinbox_camera.delete(0, "end")
         self.spinbox_camera.insert(0, "0")
+        self.label_emotion = tk.Label(master, text="", font=("Helvetica", 24))
+        self.label_emotion.pack()
+
+    def update_emotion(self, emotion_string, probability):
+        text = f"{emotion_string} - {round(probability*100)}%"
+        self.label_emotion.config(text=text)
 
     def update_frame(self, frame):
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

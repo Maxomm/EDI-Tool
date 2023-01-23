@@ -16,11 +16,10 @@ if __name__ == "__main__":
             frame, face = emo.face_from_image(frame)
             if face is not None:
                 frame_counter += 1
-                # frame = emo.add_emotion_text(frame, emotion_string)
                 if frame_counter % interface.get_frame_frequency() == 0:
                     emotion_string, probability = emo.emotion_from_face(face)
                     frame_counter = 0
-                    print(emotion_string, probability)
-
+                    interface.update_emotion(emotion_string, probability)
+                # frame = emo.add_emotion_text(frame, emotion_string)
             interface.update_frame(frame)
             root.update()
