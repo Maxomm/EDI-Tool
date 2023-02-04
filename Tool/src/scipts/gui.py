@@ -1,6 +1,7 @@
 import tkinter as tk
 
 import cv2
+from emotion_classifier import emotion_dict
 from PIL import Image, ImageTk
 
 
@@ -11,28 +12,58 @@ class GUI:
         self.master.geometry("800x600")
         self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.label = tk.Label(master)
-        self.label.pack()
+        self.label.grid(row=0, column=0, rowspan=7)
         self.frame_frequency = 10
         self.running = True
         self.camera = camera
-        self.spinbox = tk.Spinbox(
+        self.timespan = 10
+        self.spinbox_frequency = tk.Spinbox(
             master, from_=1, to=30, width=5, command=self.set_frame_frequency
         )
-        self.spinbox.pack()
-        self.spinbox.delete(0, "end")
-        self.spinbox.insert(0, self.frame_frequency)
+        self.spinbox_frequency.grid(row=8, column=0)
+        self.spinbox_frequency.delete(0, "end")
+        self.spinbox_frequency.insert(0, self.frame_frequency)
         self.spinbox_camera = tk.Spinbox(
-            master, from_=0, to=1, width=5, command=self.switch_camera
+            master, from_=0, to=5, width=5, command=self.switch_camera
         )
-        self.spinbox_camera.pack()
+        self.spinbox_camera.grid(row=9, column=0)
         self.spinbox_camera.delete(0, "end")
         self.spinbox_camera.insert(0, "0")
-        self.label_emotion = tk.Label(master, text="", font=("Helvetica", 24))
-        self.label_emotion.pack()
 
-    def update_emotion(self, emotion_string, probability):
-        text = f"{emotion_string} - {round(probability*100)}%"
+        self.spinbox_timespan = tk.Spinbox(
+            master, from_=1, to=20, width=5, command=self.change_timespan
+        )
+        self.spinbox_timespan.grid(row=10, column=0)
+        self.spinbox_timespan.delete(0, "end")
+        self.spinbox_timespan.insert(0, self.timespan)
+
+        self.label_emotion = tk.Label(master, text="placeholder")
+        self.label_emotion.grid(row=11, column=0)
+
+        self.probability_list = []
+
+        for i, emotion_text in enumerate(emotion_dict.values()):
+            tk.Label(master, text=emotion_text).grid(row=0 + i, column=1)
+
+            new_label = tk.Label(master, text="0%")
+            new_label.grid(row=0 + i, column=2)
+            self.probability_list.append(new_label)
+
+    def change_timespan(self):
+        self.timespan = int(self.spinbox_timespan.get())
+
+    def get_timespan(self):
+        return self.timespan
+
+    def update_emotion(self, emotion_string):
+        text = f"{emotion_string}"
         self.label_emotion.config(text=text)
+
+    def update_probabilities(self, in_list):
+        for i, prob_label in enumerate(self.probability_list):
+            prob_label.config(
+                text=str(in_list.count(emotion_dict[i]) * len(in_list)) + "%"
+            )
 
     def update_frame(self, frame):
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -49,8 +80,7 @@ class GUI:
         return self.running
 
     def set_frame_frequency(self):
-        new_value = self.spinbox.get()
-        self.frame_frequency = int(new_value)
+        self.frame_frequency = int(self.spinbox_frequency.get())
 
     def get_frame_frequency(self):
         return self.frame_frequency

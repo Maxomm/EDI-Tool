@@ -6,7 +6,6 @@ import numpy as np
 from keras import models
 
 emotion_dict = {
-    None: "None",
     0: "Angry",
     1: "Disgusted",
     2: "Fearful",
