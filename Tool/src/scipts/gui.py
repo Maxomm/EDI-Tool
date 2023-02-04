@@ -17,25 +17,6 @@ class GUI:
         self.running = True
         self.camera = camera
         self.timespan = 10
-        self.spinbox_frequency = tk.Spinbox(
-            master, from_=1, to=30, width=5, command=self.set_frame_frequency
-        )
-        self.spinbox_frequency.grid(row=8, column=0)
-        self.spinbox_frequency.delete(0, "end")
-        self.spinbox_frequency.insert(0, self.frame_frequency)
-        self.spinbox_camera = tk.Spinbox(
-            master, from_=0, to=5, width=5, command=self.switch_camera
-        )
-        self.spinbox_camera.grid(row=9, column=0)
-        self.spinbox_camera.delete(0, "end")
-        self.spinbox_camera.insert(0, "0")
-
-        self.spinbox_timespan = tk.Spinbox(
-            master, from_=1, to=20, width=5, command=self.change_timespan
-        )
-        self.spinbox_timespan.grid(row=10, column=0)
-        self.spinbox_timespan.delete(0, "end")
-        self.spinbox_timespan.insert(0, self.timespan)
 
         self.label_emotion = tk.Label(master, text="placeholder")
         self.label_emotion.grid(row=11, column=0)
@@ -48,6 +29,29 @@ class GUI:
             new_label = tk.Label(master, text="0%")
             new_label.grid(row=0 + i, column=2)
             self.probability_list.append(new_label)
+
+        self._init_spinboxes()
+
+    def _init_spinboxes(self):
+        self.spinbox_frequency = tk.Spinbox(
+            self.master, from_=1, to=30, width=5, command=self.set_frame_frequency
+        )
+        self.spinbox_frequency.grid(row=8, column=0)
+        self.spinbox_frequency.delete(0, "end")
+        self.spinbox_frequency.insert(0, self.frame_frequency)
+        self.spinbox_camera = tk.Spinbox(
+            self.master, from_=0, to=5, width=5, command=self.switch_camera
+        )
+        self.spinbox_camera.grid(row=9, column=0)
+        self.spinbox_camera.delete(0, "end")
+        self.spinbox_camera.insert(0, "0")
+
+        self.spinbox_timespan = tk.Spinbox(
+            self.master, from_=1, to=20, width=5, command=self.change_timespan
+        )
+        self.spinbox_timespan.grid(row=10, column=0)
+        self.spinbox_timespan.delete(0, "end")
+        self.spinbox_timespan.insert(0, self.timespan)
 
     def change_timespan(self):
         self.timespan = int(self.spinbox_timespan.get())
