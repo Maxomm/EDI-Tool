@@ -61,9 +61,8 @@ class GUI:
 
     def update_probabilities(self, in_list):
         for i, prob_label in enumerate(self.probability_list):
-            prob_label.config(
-                text=str(in_list.count(emotion_dict[i]) * len(in_list)) + "%"
-            )
+            percent = round(in_list.count(emotion_dict[i]) / len(in_list) * 100)
+            prob_label.config(text=str(percent) + "%")
 
     def update_frame(self, frame):
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
