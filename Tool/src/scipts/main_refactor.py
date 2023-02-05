@@ -4,7 +4,7 @@ import tkinter as tk
 from collections import deque
 from camera import CameraController
 from emotion_classifier import EmotionClassifier
-from emotion_server import EmotionServer
+from server import EmotionServer
 from gui import GUI
 
 PORT = 12345
@@ -74,13 +74,12 @@ if __name__ == "__main__":
                         # Reduce the queue if necessary
                         timespan = interface.get_timespan()
 
-                        print(emotion_queue)
-
                         if len(emotion_queue) != timespan:
                             emotion_queue = deque(emotion_queue, maxlen=timespan)
                 
-                # Update image with new frame
-                interface.update_frame(frame)
+                # Update image with new frame if enabled in interface
+                if interface.get_show_image():
+                    interface.update_frame(frame)
 
     # Start the frame processing function in a separate thread
     frame_thread = threading.Thread(target=process_frames)

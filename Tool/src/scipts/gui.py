@@ -8,6 +8,7 @@ from PIL import Image, ImageTk
 class GUI:
     def __init__(self, master=None, camera=None):
         self.master = master
+        self.show_image = False
         self.master.title("Webcam feed")
         self.master.geometry("800x600")
         self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -55,6 +56,9 @@ class GUI:
 
     def change_timespan(self):
         self.timespan = int(self.spinbox_timespan.get())
+
+    def get_show_image(self):
+        return self.show_image
 
     def get_timespan(self):
         return self.timespan
