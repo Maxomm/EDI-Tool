@@ -37,7 +37,7 @@ class EmotionServer:
         last_message = " "
         while connected:
             try:
-                message = str(self.emo).encode("UTF-8")
+                message = self.emo.encode("UTF-8")
                 if last_message != message:
                     conn.send(message)
                     print(f"Sending {message}")
