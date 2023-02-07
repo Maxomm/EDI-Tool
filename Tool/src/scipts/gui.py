@@ -8,7 +8,7 @@ from PIL import Image, ImageTk
 class GUI:
     def __init__(self, master=None, camera=None):
         self.master = master
-        self.show_image = False
+        self.show_image = True
         self.master.title("Webcam feed")
         self.master.geometry("800x600")
         self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -18,6 +18,7 @@ class GUI:
         self.running = True
         self.camera = camera
         self.timespan = 10
+        self.threshold = 0.5
 
         self.label_emotion = tk.Label(master, text="placeholder")
         self.label_emotion.grid(row=11, column=0)
@@ -53,6 +54,20 @@ class GUI:
         self.spinbox_timespan.grid(row=10, column=0)
         self.spinbox_timespan.delete(0, "end")
         self.spinbox_timespan.insert(0, self.timespan)
+
+        self.spinbox_threshold = tk.Spinbox(
+            self.master, from_=0.1, to=1.0, width=5, increment=0.1, command=self.change_timespan
+        )
+        self.spinbox_threshold.grid(row=12,column=0)
+        self.spinbox_threshold.delete(0, "end")
+        self.spinbox_threshold.insert(0, self.threshold)
+
+
+    def get_threshold(self):
+        return self.threshold
+
+    def change_threshold(self):
+        self.threshold = float(self.spinbox_threshold.get())
 
     def change_timespan(self):
         self.timespan = int(self.spinbox_timespan.get())
