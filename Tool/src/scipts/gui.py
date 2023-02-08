@@ -14,16 +14,19 @@ class GUI:
         self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.label = tk.Label(master)
         self.label.grid(row=0, column=0, rowspan=7)
-        self.frame_frequency = 10
+        self.frame_frequency = 5
         self.running = True
         self.camera = camera
-        self.timespan = 10
+        self.timespan = 5
         self.threshold = 0.5
 
         self.label_emotion = tk.Label(master, text="placeholder")
         self.label_emotion.grid(row=11, column=0)
 
         self.probability_list = []
+        self.enable_camera = tk.IntVar(value=1)
+        self.checkbox_widget = tk.Checkbutton(master, text="Update Frames", variable=self.enable_camera)
+        self.checkbox_widget.grid(row=13,column=0)
 
         for i, emotion_text in enumerate(emotion_dict.values()):
             tk.Label(master, text=emotion_text).grid(row=0 + i, column=1)
@@ -62,6 +65,9 @@ class GUI:
         self.spinbox_threshold.delete(0, "end")
         self.spinbox_threshold.insert(0, self.threshold)
 
+
+    def get_enable_camera(self):
+        return self.enable_camera.get()
 
     def get_threshold(self):
         return self.threshold
