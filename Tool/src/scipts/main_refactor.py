@@ -8,7 +8,7 @@ from server import EmotionServer
 from gui import GUI
 
 PORT = 12345
-HOST = "192.168.0.183"
+HOST = "127.0.0.1"
 
 
 def most_frequent(in_list):
@@ -75,14 +75,14 @@ if __name__ == "__main__":
                         freq_emotion, probability = most_frequent(emotion_queue)
                         interface.update_emotion(freq_emotion)
 
+                        timespan = interface.get_timespan()
+
                         # Set the emotion in the server
-                        if probability >= interface.get_threshold():
+                        if probability >= interface.get_threshold() and len(emotion_queue) == timespan:
                             server.set_emotion(freq_emotion)
                         # server.set_emotion(freq_emotion + str(probability * 100))
 
                         # Reduce the queue if necessary
-                        timespan = interface.get_timespan()
-
                         if len(emotion_queue) != timespan:
                             emotion_queue = deque(emotion_queue, maxlen=timespan)
                 else:
