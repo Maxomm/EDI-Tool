@@ -35,6 +35,15 @@ class EmotionServer:
                 break
         print("Closing socket")
 
+    def get_host(self):
+        return self.host
+    
+    def get_port(self):
+        return self.port
+
+    def get_server_adress(self):
+        return f"Online {self.host} : {self.port}"
+
     def set_emotion(self, in_emotion):
         self.emo = in_emotion
 

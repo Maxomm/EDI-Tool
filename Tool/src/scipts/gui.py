@@ -8,10 +8,11 @@ from PIL import Image, ImageTk
 class GUI:
     def __init__(self, master=None, camera=None, server=None):
         self.master = master
+        self.camera = camera
         self.server = server
         self.show_image = True
         self.bold_font = ("Arial", 10, "bold")
-        self.master.title("Webcam feed")
+        self.master.title("Emotion-Driven Interface Tool")
         self.master.geometry("654x600")
         self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
 
@@ -29,13 +30,13 @@ class GUI:
         tk.Label(self.frame, text="Camera:",font=self.bold_font).grid(row=0, column=0, sticky="w")
         tk.Label(self.frame, text="Emotion:",font=self.bold_font).grid(row=1, column=0, sticky="w")
         tk.Label(self.frame, text="Server:",font=self.bold_font).grid(row=2, column=0, sticky="w")
-        self.label_cam = tk.Label(self.frame, text="0")
+        self.label_cam = tk.Label(self.frame,font=self.bold_font, text=self.camera.get_source())
         self.label_cam.grid(row=0, column=1, sticky="w")
-        self.label_emotion = tk.Label(self.frame, text="label_emotion")
+        self.label_emotion = tk.Label(self.frame,font=self.bold_font, text="waiting")
         self.label_emotion.grid(row=1, column=1, sticky="w")
-        self.label_server = tk.Label(self.frame, text="offline")
+        self.label_server = tk.Label(self.frame,font=self.bold_font, text="Offline",fg="#006400")
         self.label_server.grid(row=2, column=1, sticky="w")
-
+        self.update_server_status()
         self.frame_frequency = 5
         self.running = True
         self.camera = camera
@@ -43,12 +44,15 @@ class GUI:
         self.threshold = 0.5
         self.probability_list = []
         self.enable_camera = tk.IntVar(value=1)
-        self.host_string = "not set"
-        self.port_string = "not set"
+
+    def update_server_status(self):
+        self.label_server.config(text=self.server.get_server_adress())
 
     def open_settings(self):
         self.toplevel = tk.Toplevel(self.master)
         self.toplevel.title("Settings")
+        self.toplevel.resizable(0, 0)
+        self.toplevel.focus_set()
         self.init_camera_settings()
         self.init_emotion_settings()
         self.init_server_settings()
@@ -108,27 +112,24 @@ class GUI:
         server_settings.pack(side="top", fill="x")
         title = tk.Label(server_settings, text="Server Settings", font=self.bold_font)
         title.grid(row=0, column=0, sticky="w")
-        tk.Label(server_settings, text="HOST").grid(row=1, column=0, sticky="w")
+        tk.Label(server_settings, text="Host").grid(row=1, column=0, sticky="w")
         self.host_entry = tk.Entry(server_settings,width=10,justify="right")
         self.host_entry.grid(row=1, column=1, sticky="w")
         self.host_entry.delete(0, "end")
-        self.host_entry.insert(0, self.host_string)
-        tk.Label(server_settings, text="PORT").grid(row=2, column=0, sticky="w")
+        self.host_entry.insert(0, self.server.get_host())
+        tk.Label(server_settings, text="Port").grid(row=2, column=0, sticky="w")
         self.port_entry = tk.Entry(server_settings,width=10,justify="right")
         self.port_entry.grid(row=2, column=1, sticky="w")
         self.port_entry.delete(0, "end")
-        self.port_entry.insert(0, self.port_string)
+        self.port_entry.insert(0, self.server.get_port())
         self.restart_button = tk.Button(server_settings, text="Restart Server",
-            command=self.restart_server_button)
-        self.restart_button.grid(row=3,column=0,columnspan=2)
+            command=self.restart_server_button,width=20)
+        self.restart_button.grid(row=3, column=0,columnspan=2, pady=(15, 0))
 
     def restart_server_button(self):
         print("restarting")
         self.server.restart_server(self.host_entry.get(),self.port_entry.get())
-
-    def set_host_port_string(self, host, port):
-        self.host_string = host
-        self.port_string = port
+        self.update_server_status()
 
     def menu(self):
         menubar = tk.Menu(self.master)
@@ -196,3 +197,4 @@ class GUI:
     def switch_camera(self):
         new_value = self.spinbox_camera.get()
         self.camera.switch_camera(int(new_value))
+        self.label_cam.config(self.camera.get_source())

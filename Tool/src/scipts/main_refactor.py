@@ -46,7 +46,6 @@ if __name__ == "__main__":
         with CameraController() as camera_controller:
             # Initialize the GUI object
             interface = GUI(root, camera_controller,server_controller)
-            interface.set_host_port_string(HOST,PORT)
             # Initialize a deque to store the emotion strings
             emotion_queue = deque(maxlen=interface.get_timespan())
 

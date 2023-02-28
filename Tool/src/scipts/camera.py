@@ -28,6 +28,9 @@ class CameraController:
             return frame
         return None
 
+    def get_source(self):
+        return self.source
+
     def switch_camera(self, source):
         # Open the new camera source
         self.capture.open(source)
