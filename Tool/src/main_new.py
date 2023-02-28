@@ -29,7 +29,7 @@ if __name__ == "__main__":
     emo = EmotionClassifier()
 
     # Initialize the GUI object
-    root = tk.Tk()
+    root = tk.Tk("loading")
 
     # Initialize the EmotionServer object
     server_controller = EmotionServer(HOST, PORT)
