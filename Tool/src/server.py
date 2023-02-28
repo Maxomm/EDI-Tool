@@ -16,7 +16,7 @@ class EmotionServer:
         self.stop_flag = threading.Event()
         self.client_handler_stop_flag = threading.Event()
         self.server_thread.start()
-        
+
         print(f"Started server {self.host}:{self.port}")
 
     def start_server(self):
@@ -37,7 +37,7 @@ class EmotionServer:
 
     def get_host(self):
         return self.host
-    
+
     def get_port(self):
         return self.port
 
@@ -79,4 +79,3 @@ class EmotionServer:
         for thread in self.client_threads:
             thread.join()
         self.server_thread.join()
-

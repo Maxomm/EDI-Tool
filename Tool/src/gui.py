@@ -27,9 +27,15 @@ class GUI:
         self.frame.grid(row=1, column=0, sticky="w", padx=20, pady=5)
 
         # create the labels
-        tk.Label(self.frame, text="Camera:",font=self.bold_font).grid(row=0, column=0, sticky="w")
-        tk.Label(self.frame, text="Emotion:",font=self.bold_font).grid(row=1, column=0, sticky="w")
-        tk.Label(self.frame, text="Server:",font=self.bold_font).grid(row=2, column=0, sticky="w")
+        tk.Label(self.frame, text="Camera:", font=self.bold_font).grid(
+            row=0, column=0, sticky="w"
+        )
+        tk.Label(self.frame, text="Emotion:", font=self.bold_font).grid(
+            row=1, column=0, sticky="w"
+        )
+        tk.Label(self.frame, text="Server:", font=self.bold_font).grid(
+            row=2, column=0, sticky="w"
+        )
         self.label_cam = tk.Label(self.frame, text=self.camera.get_source())
         self.label_cam.grid(row=0, column=1, sticky="w")
         self.label_emotion = tk.Label(self.frame, text="waiting")
@@ -113,22 +119,26 @@ class GUI:
         title = tk.Label(server_settings, text="Server Settings", font=self.bold_font)
         title.grid(row=0, column=0, sticky="w")
         tk.Label(server_settings, text="Host").grid(row=1, column=0, sticky="w")
-        self.host_entry = tk.Entry(server_settings,width=10,justify="right")
+        self.host_entry = tk.Entry(server_settings, width=10, justify="right")
         self.host_entry.grid(row=1, column=1, sticky="w")
         self.host_entry.delete(0, "end")
         self.host_entry.insert(0, self.server.get_host())
         tk.Label(server_settings, text="Port").grid(row=2, column=0, sticky="w")
-        self.port_entry = tk.Entry(server_settings,width=10,justify="right")
+        self.port_entry = tk.Entry(server_settings, width=10, justify="right")
         self.port_entry.grid(row=2, column=1, sticky="w")
         self.port_entry.delete(0, "end")
         self.port_entry.insert(0, self.server.get_port())
-        self.restart_button = tk.Button(server_settings, text="Restart Server",
-            command=self.restart_server_button,width=20)
-        self.restart_button.grid(row=3, column=0,columnspan=2, pady=(15, 0))
+        self.restart_button = tk.Button(
+            server_settings,
+            text="Restart Server",
+            command=self.restart_server_button,
+            width=20,
+        )
+        self.restart_button.grid(row=3, column=0, columnspan=2, pady=(15, 0))
 
     def restart_server_button(self):
         print("restarting")
-        self.server.restart_server(self.host_entry.get(),self.port_entry.get())
+        self.server.restart_server(self.host_entry.get(), self.port_entry.get())
         self.update_server_status()
 
     def menu(self):

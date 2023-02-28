@@ -37,7 +37,7 @@ if __name__ == "__main__":
     def process_frames():
         # Counter to keep track of the number of frames processed
         frame_counter = 0
-         # Counter to keep track of the number of consecutive frames without a detected face
+        # Counter to keep track of the number of consecutive frames without a detected face
         no_face_counter = 0
         # Threshold for the number of consecutive frames without a detected face
         no_face_threshold = 100
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         # Use a camera controller to access the camera
         with CameraController() as camera_controller:
             # Initialize the GUI object
-            interface = GUI(root, camera_controller,server_controller)
+            interface = GUI(root, camera_controller, server_controller)
             # Initialize a deque to store the emotion strings
             emotion_queue = deque(maxlen=interface.get_timespan())
 
@@ -77,7 +77,10 @@ if __name__ == "__main__":
                         timespan = interface.get_timespan()
 
                         # Set the emotion in the server
-                        if probability >= interface.get_threshold() and len(emotion_queue) == timespan:
+                        if (
+                            probability >= interface.get_threshold()
+                            and len(emotion_queue) == timespan
+                        ):
                             server_controller.set_emotion(freq_emotion)
                         # server.set_emotion(freq_emotion + str(probability * 100))
 
@@ -88,7 +91,11 @@ if __name__ == "__main__":
                     no_face_counter += 1
 
                     if no_face_counter >= no_face_threshold:
-                        print("Timeout: No face detected for", no_face_threshold, "consecutive frames.")
+                        print(
+                            "Timeout: No face detected for",
+                            no_face_threshold,
+                            "consecutive frames.",
+                        )
                         emotion_queue.clear()
                         # Reset the counter
                         no_face_counter = 0
