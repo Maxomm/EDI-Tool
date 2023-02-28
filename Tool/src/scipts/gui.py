@@ -6,8 +6,9 @@ from PIL import Image, ImageTk
 
 
 class GUI:
-    def __init__(self, master=None, camera=None):
+    def __init__(self, master=None, camera=None, server=None):
         self.master = master
+        self.server = server
         self.show_image = True
         self.bold_font = ("Arial", 10, "bold")
         self.master.title("Webcam feed")
@@ -42,18 +43,20 @@ class GUI:
         self.threshold = 0.5
         self.probability_list = []
         self.enable_camera = tk.IntVar(value=1)
+        self.host_string = "not set"
+        self.port_string = "not set"
 
     def open_settings(self):
         self.toplevel = tk.Toplevel(self.master)
         self.toplevel.title("Settings")
         self.init_camera_settings()
         self.init_emotion_settings()
+        self.init_server_settings()
         self.toplevel.update()
 
     def init_camera_settings(self):
-
         camera_settings = tk.Frame(self.toplevel, padx=30, pady=15)
-        camera_settings.pack()
+        camera_settings.pack(side="top", fill="x")
         title = tk.Label(camera_settings, text="Camera Settings", font=self.bold_font)
         title.grid(row=0, column=0, sticky="w")
 
@@ -77,7 +80,7 @@ class GUI:
 
     def init_emotion_settings(self):
         emotion_settings = tk.Frame(self.toplevel, padx=30, pady=15)
-        emotion_settings.pack()
+        emotion_settings.pack(side="top", fill="x")
         title = tk.Label(emotion_settings, text="Emotion Settings", font=self.bold_font)
         title.grid(row=0, column=0, sticky="w")
         tk.Label(emotion_settings, text="Timespan").grid(row=1, column=0, sticky="w")
@@ -99,6 +102,33 @@ class GUI:
         self.spinbox_threshold.grid(row=2, column=1, sticky="w")
         self.spinbox_threshold.delete(0, "end")
         self.spinbox_threshold.insert(0, self.threshold)
+
+    def init_server_settings(self):
+        server_settings = tk.Frame(self.toplevel, padx=30, pady=15)
+        server_settings.pack(side="top", fill="x")
+        title = tk.Label(server_settings, text="Server Settings", font=self.bold_font)
+        title.grid(row=0, column=0, sticky="w")
+        tk.Label(server_settings, text="HOST").grid(row=1, column=0, sticky="w")
+        self.host_entry = tk.Entry(server_settings,width=10,justify="right")
+        self.host_entry.grid(row=1, column=1, sticky="w")
+        self.host_entry.delete(0, "end")
+        self.host_entry.insert(0, self.host_string)
+        tk.Label(server_settings, text="PORT").grid(row=2, column=0, sticky="w")
+        self.port_entry = tk.Entry(server_settings,width=10,justify="right")
+        self.port_entry.grid(row=2, column=1, sticky="w")
+        self.port_entry.delete(0, "end")
+        self.port_entry.insert(0, self.port_string)
+        self.restart_button = tk.Button(server_settings, text="Restart Server",
+            command=self.restart_server_button)
+        self.restart_button.grid(row=3,column=0,columnspan=2)
+
+    def restart_server_button(self):
+        print("restarting")
+        self.server.restart_server(self.host_entry.get(),self.port_entry.get())
+
+    def set_host_port_string(self, host, port):
+        self.host_string = host
+        self.port_string = port
 
     def menu(self):
         menubar = tk.Menu(self.master)

@@ -32,7 +32,7 @@ if __name__ == "__main__":
     root = tk.Tk()
 
     # Initialize the EmotionServer object
-    server = EmotionServer(HOST, PORT)
+    server_controller = EmotionServer(HOST, PORT)
 
     def process_frames():
         # Counter to keep track of the number of frames processed
@@ -45,8 +45,8 @@ if __name__ == "__main__":
         # Use a camera controller to access the camera
         with CameraController() as camera_controller:
             # Initialize the GUI object
-            interface = GUI(root, camera_controller)
-
+            interface = GUI(root, camera_controller,server_controller)
+            interface.set_host_port_string(HOST,PORT)
             # Initialize a deque to store the emotion strings
             emotion_queue = deque(maxlen=interface.get_timespan())
 
@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
                         # Set the emotion in the server
                         if probability >= interface.get_threshold() and len(emotion_queue) == timespan:
-                            server.set_emotion(freq_emotion)
+                            server_controller.set_emotion(freq_emotion)
                         # server.set_emotion(freq_emotion + str(probability * 100))
 
                         # Reduce the queue if necessary
