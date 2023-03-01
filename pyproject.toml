@@ -14,6 +14,7 @@ tensorflow = "2.9.0"
 auto-py-to-exe = "^2.22.0"
 opencv-python = "^4.6.0.66"
 scipy = "^1.10.0"
+pylint = "^2.16.2"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.2"
@@ -23,7 +24,6 @@ isort = "^5.10.1"
 mypy = "^0.931"
 rope = "^0.22.0"
 vulture = "^2.3"
-ruff = "^0.0.241"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

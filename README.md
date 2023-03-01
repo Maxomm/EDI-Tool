@@ -4,9 +4,6 @@ Emotion recognition by facial expression with a simple user interface created to
 
 ## Usage
 - Run main.py
-- Select camera input
-- Start socket server
-- Connect client
 
 ## Reference
 - Emotion Detection is based on: [Emotion-detection](https://github.com/atulapra/Emotion-detection) by Atul Balaji
