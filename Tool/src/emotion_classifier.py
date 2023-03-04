@@ -3,7 +3,6 @@ import numpy as np
 from keras import models
 from utilities import resource_path
 
-
 emotion_dict = {
     0: "Angry",
     1: "Disgusted",

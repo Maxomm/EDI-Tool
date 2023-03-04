@@ -1,11 +1,11 @@
 import threading
 import tkinter as tk
-
 from collections import deque
+
 from camera import CameraController
 from emotion_classifier import EmotionClassifier
-from server import EmotionServer
 from gui import GUI
+from server import EmotionServer
 
 PORT = 12345
 HOST = "127.0.0.1"
